@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/tabbar/tabbar-1/tabbar-1",
+    "pages/tabbar/users/view/mine",
+    "pages/login/login",
+    "pages/main/main",
+    "pages/reg/reg",
+    "pages/pwd/pwd",
+    "pages/user/user",
+    "pages/chat/chat",
+    "pages/tabbar/users/view/addfriend/addfriend",
+    "pages/tabbar/group/CreateGroup/CreateGroup",
+    "pages/tabbar/group/AddGroup/AddGroup",
+    "pages/tabbar/group/ListGroup/ListGroup",
+    "pages/chat/Group"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "borderStyle": "black",
+    "backgroundColor": "#333",
+    "color": "#8F8F94",
+    "selectedColor": "#f33e54",
+    "list": [
+      {
+        "pagePath": "pages/tabbar/tabbar-1/tabbar-1",
+        "iconPath": "static/img/tabbar/home.png",
+        "selectedIconPath": "static/img/tabbar/homeactive.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/tabbar/group/ListGroup/ListGroup",
+        "iconPath": "static/img/tabbar/guanzhu.png",
+        "selectedIconPath": "static/img/tabbar/guanzhuactive.png",
+        "text": "群组"
+      },
+      {
+        "pagePath": "pages/tabbar/users/view/mine",
+        "iconPath": "static/img/tabbar/me.png",
+        "selectedIconPath": "static/img/tabbar/meactive.png",
+        "text": "我"
+      }
+    ]
+  },
+  "nvueCompiler": "uni-app",
+  "renderer": "auto",
+  "splashscreen": {
+    "alwaysShowBeforeRender": true,
+    "autoclose": false
+  },
+  "appname": "chat",
+  "compilerVersion": "2.4.6",
+  "usingComponents": {}
+}
