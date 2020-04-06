@@ -8,7 +8,7 @@
 						selWidth="200px"
 						selHeight="200px"
 						@upload="updateAvatar"
-						:avatarSrc="userInfo.avatar"
+						:avatarSrc="avatar"
 						avatarStyle="width: 50px;height: 50px;border-radius: 5px;"
 					></avatar>
 				</view>
@@ -41,9 +41,7 @@ export default {
 		return {
 			GroupName: '',
 			GroupIntroduction: '',
-			userInfo: {
-				avatar: ''
-			},
+			avatar: '',
 			reload: false
 		};
 	},
@@ -64,7 +62,7 @@ export default {
 						name: this.GroupName,
 						cate: 1,
 						memo: this.GroupIntroduction,
-						icon: '/asset/images/community.png',
+						icon: this.avatar?this.avatar:'/asset/images/community.png',
 						ownerid: uni.getStorageSync('UID') // 群主ID
 					},
 					header: {
@@ -97,7 +95,24 @@ export default {
 					duration: 2000
 				});
 			}
-		}
+		},
+		updateAvatar(res) {
+			let self = this;
+			this.avatar = res.path;
+			uni.uploadFile({
+				url: uni.getStorageSync('URL') + '/attach/upload',
+				filePath: res.path,
+				name: 'file',
+				success: r => {
+					let ret = JSON.parse(r.data);
+					if(ret.code == 0){
+						// self.avatar = ret.data;
+					}
+				},fail:err=>{
+					console.log(err);
+				}
+			});
+		},
 	}
 };
 </script>

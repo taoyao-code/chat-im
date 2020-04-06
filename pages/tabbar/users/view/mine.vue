@@ -66,25 +66,30 @@ export default {
 		this.userInfo.avatar = uni.getStorageSync('avatar');
 	},
 	onShow() {
-		// UserApi.getUserInfo(this.reload, userInfo => {
-		// 	this.userInfo = userInfo;
-		// 	//console.log("user info  : ", this.userInfo)
-		// });
+		
 	},
 	methods: {
 		updateAvatar(res) {
+			// 头像
 			let self = this;
 			this.userInfo.avatar = res.path;
-			//console.log(res);
-			UserApi.uploadAvatar(
-				this.userInfo.avatar,
-				avatarURL => {
-					//console.log(res);
-					console.log('user :', UserManager.getUserInfo().avatar);
-					self.userInfo.avatar = avatarURL;
-				},
-				(code, msg) => {}
-			);
+			uni.uploadFile({
+				url: uni.getStorageSync('URL') + '/attach/upload', //仅为示例，非真实的接口地址
+				filePath: res.path,
+				name: 'file',
+				// formData: {
+				// 	id: uni.getStorageSync('UID'),// 暂时无用
+				// },
+				success: (r) => {
+					let ret = JSON.parse(r.data);
+					if(ret.code == 0){
+						// self.userInfo.avatar = ret.data;
+						self.updateUser(ret.data)
+					}
+				},fail:err=>{
+					console.log(err);
+				}
+			});
 		},
 		jumpToMyQrcodeCard() {
 			UserJumpHelper.jumpToMyQrcodeCard();
@@ -106,11 +111,40 @@ export default {
 			});
 		},
 		userOut() {
+			let msg = {
+				userid: uni.getStorageSync('UID'),
+				cmd: 1,
+			};
+			this.$store.commit('webSocketSend', msg);
 			uni.removeStorageSync('UID');
 			uni.removeStorageSync('Token');
 			// 账号退出
 			uni.reLaunch({
 				url: '../../../login/login'
+			});
+		},
+		updateUser(url){
+			uni.request({
+				url: uni.getStorageSync('URL')+'/user/updateUser',
+				method: 'POST',
+				data: {
+					userid: uni.getStorageSync('UID'),
+					avatar: url
+				},
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
+				},
+				success: res => {
+					if (res.data.code == 0) {
+						// 
+						
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							duration: 2000
+						});
+					}
+				}
 			});
 		},
 		systemSettings() {

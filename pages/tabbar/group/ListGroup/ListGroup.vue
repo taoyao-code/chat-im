@@ -1,7 +1,13 @@
 <template>
 	<view>
 		<uni-list v-for="g in GroupList" :key="g.id" class="pg_list_cell_left">
-			<uni-list-item thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png" @tap="chat(g.id, g.Name)">{{ g.Name }}</uni-list-item>
+			<uni-list-item :showArrow="false" @tap="chat(g.id, g.Name)">
+				<template v-slot:right="">
+					<image style="width: 40px;height: 40px;" :src="image(g.icon)" mode="widthFix"></image>
+				</template>
+				{{ g.Name }}
+			</uni-list-item>
+			<view style='background-color:#f7f7f7;height:1px;border:none;'></view>
 		</uni-list>
 	</view>
 </template>
@@ -18,15 +24,15 @@ export default {
 		};
 	},
 	onLoad() {
-		let that = this
+		let that = this;
 		that.loadfriend();
 		uni.$on('updateGroupList', function(res) {
-			that.loadfriend()
+			that.loadfriend();
 		});
 	},
 	onShow() {},
-	onUnload(){
-		uni.$once('FriendsList')
+	onUnload() {
+		uni.$once('FriendsList');
 	},
 	methods: {
 		chat(id, name) {
@@ -49,6 +55,9 @@ export default {
 					this.GroupList = res.data.rows;
 				}
 			});
+		},
+		image(url) {
+			return uni.getStorageSync('URL') + url;
 		}
 	}
 };

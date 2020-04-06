@@ -97,7 +97,7 @@ export default {
 						uni.setStorageSync('Token', token);
 						uni.setStorageSync('nickname', res.data.data.nickname);
 						uni.setStorageSync('mobile', res.data.data.mobile);
-						uni.setStorageSync('avatar', res.data.data.avatar ? res.data.data.avatar : 'https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png');
+						uni.setStorageSync('avatar', res.data.data.avatar ? uni.getStorageSync('URL') + res.data.data.avatar : 'https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png');
 						this.$store.commit('setUid', uid);
 						this.$store.commit('setSid', token);
 						this.$store.commit('setUrl', uni.getStorageSync('WS') + '/chat?id=' + uid + '&token=' + token);

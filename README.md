@@ -1,19 +1,51 @@
-### BUG:
-	添加群后，没有更新列表 ----------- 解决-----》事件监听器
-	添加好友，没有更新列表 ----------- 解决-》
-	发送好友消息不显示---------------- 解决--------》渲染时，id互换
-	键盘弹出问题。--------------------解决--------》input 弹出问题
-	
-	数据问题-------》群数据暂存问题-----解决------》、渲染数据后，删除当条数据
-	
-	H5端 ----------》刷新后页面404-------------》
-	
-	
-	
-	
-	
+# 基于uniapp实现聊天程序
+## 目前实现功能
+- 登录注册
+- 添加好友/群
+- 加入群
+- 单聊
+- 群聊
+- 退出
+- 上传头像
+
+
+
+## 使用说明
+首次使用
+```
+1.修改 App.vue 中 ws 和 url 信息
+```
+
+## 服务端
+```
+https://github.com/ltsj404/IM.git
+```​	
+
 ​	
+<!-- 
+or create a new repository on the command line
+
+```bash
+echo "# chat-im" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/ltsj404/chat-im.git
+git push -u origin master
+                
+```
+
+### or push an existing repository from the command line
+
+```bash
+git remote add origin https://github.com/ltsj404/chat-im.git
+git push -u origin master
+```
+
+
+ -->
 ​	
+
 ### Nginx 
 ```bash
 [配置 Nginx 反向代理 WebSocket](https://www.hi-linux.com/posts/42176.html)
