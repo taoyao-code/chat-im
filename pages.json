@@ -1,6 +1,5 @@
 {
 	"pages": [
-		
 		{
 			"path": "pages/tabbar/tabbar-1/tabbar-1",
 			"style": {
@@ -17,12 +16,7 @@
 		        "navigationBarTitleText": "登录"
 		    }
 		},
-		{
-		    "path": "pages/main/main",
-		    "style": {
-		        "navigationBarTitleText": "登录模板"
-		    }
-		},  {
+		 {
 		    "path": "pages/reg/reg",
 		    "style": {
 		        "navigationBarTitleText": "注册"
@@ -74,6 +68,18 @@
 					"softinputMode": "adjustResize"
 				}
 			}
+        }
+        ,{
+            "path" : "pages/chat/chatim",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/chat/Groupim",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/setting/setting",
+            "style" : {}
         }
     ],
 	"globalStyle": {

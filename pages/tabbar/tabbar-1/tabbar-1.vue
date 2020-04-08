@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<!--   user.avatar -->
 		<uni-list v-for="user in UserList" :key="user.id" class="pg_list_cell_left">
 			<uni-list-item thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png" @tap="chat(user.id,user.nickname)">{{ user.nickname }}</uni-list-item>
 		</uni-list>
@@ -32,7 +33,8 @@ export default {
 	methods: {
 		chat(id,name) {
 			uni.navigateTo({
-				url: '../../chat/chat?id=' + id+'&name='+name
+				url:'../../chat/chatim?id=' + id+'&name='+name
+				// url: '../../chat/chat?id=' + id+'&name='+name
 			});
 		},
 		loadfriend() {
@@ -50,6 +52,9 @@ export default {
 					this.UserList = res.data.rows;
 				}
 			});
+		},
+		image(url){
+			return uni.getStorageSync('URL')+url;
 		}
 	}
 };

@@ -21,6 +21,10 @@
 							<view class="content bg-green shadow">
 								<text>{{item.content}}</text>
 							</view>
+							
+							<!-- 文字消息 -->
+							<!-- <view v-if="item.media == '1'" class="bubble"><rich-text :nodes="row.content"></rich-text></view> -->
+							
 						</view>
 						<view class="cu-avatar radius" v-if="item.userid!=selfName" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big143004.jpg);"></view>
 						<view class="main" v-if="item.userid!=selfName">
@@ -81,7 +85,7 @@
 				scrollTop: 0,
 				InputBottom: 0,
 				// selfName: '',
-				selfName: '', // 用户ID
+				selfName: 0, // 用户ID
 				userMsg: '',
 				// propHide: true,
 				propHide: false,
@@ -137,10 +141,16 @@
 		},
 		watch: {
 			'SocketState.chartPage': function(val) {
+				let State = this.$store.state.SocketState.chartPage;
 				for (var i = 0; i < val.length; i++) {
 					if(val[i].dstid == this.selfName){
-						this.chartPage = val;
+						
+						this.chartPage.push(val[i])
 						this.isScrollBottom();
+						
+						// 渲染数据后在数据中删除当前数据
+						State.splice(i,1);
+						this.$store.state.SocketState.chartPage = State
 					}
 				}
 			}
@@ -151,7 +161,7 @@
 					return false;
 				}
 				let msg = {
-					userid: this.selfName,
+					userid: parseInt(this.selfName),
 					dstid: parseInt(this.dstid),
 					cmd: 10,
 					media: 1,

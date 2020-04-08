@@ -136,8 +136,7 @@ export default {
 				},
 				success: res => {
 					if (res.data.code == 0) {
-						// 
-						
+						uni.setStorageSync('avatar',uni.getStorageSync('URL')+url)
 					} else {
 						uni.showToast({
 							title: res.data.msg,
@@ -150,6 +149,9 @@ export default {
 		systemSettings() {
 			// 系统设置
 			let that = this
+			uni.navigateTo({
+				url: '../../../setting/setting'
+			});
 		}
 	}
 };

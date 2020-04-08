@@ -62,6 +62,6 @@
         "router" : {
             "mode" : "history"
         },
-        "domain" : "http://doc.bo5.xyz/"
+        "domain" : "http://doc.bo5.xyz"
     }
 }

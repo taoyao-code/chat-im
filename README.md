@@ -7,8 +7,12 @@
 - 群聊
 - 退出
 - 上传头像
+- 消息震动
+- 发送表情
+- 
 
-
+## 待修改
+- 列表头像问题
 
 ## 使用说明
 首次使用
@@ -53,9 +57,9 @@ git push -u origin master
 
 
 
-#### 查看所有8088端口
+#### 查看所有8081端口
 
-`netstat -ntulp | grep 8088`
+`netstat -ntulp | grep 8081`
 
 ### Linux
 

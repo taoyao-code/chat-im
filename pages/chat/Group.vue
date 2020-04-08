@@ -161,7 +161,7 @@
 					return false;
 				}
 				let msg = {
-					userid: this.selfName,
+					userid: parseInt(this.selfName),
 					dstid: parseInt(this.dstid),
 					cmd: 11,
 					media: 1,

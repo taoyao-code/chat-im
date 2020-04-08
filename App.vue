@@ -1,11 +1,11 @@
 <script>
 export default {
 	onLaunch: function() {
-		uni.setStorageSync('WS', 'ws://localhost:8081');
-		uni.setStorageSync('URL', 'http://localhost:8081');
+		// uni.setStorageSync('WS', 'ws://localhost:8081');
+		// uni.setStorageSync('URL', 'http://localhost:8081');
 		
-		// uni.setStorageSync('WS', 'ws://chat.bo5.xyz');
-		// uni.setStorageSync('URL', 'http://chat.bo5.xyz');
+		uni.setStorageSync('WS', 'ws://chat.bo5.xyz');
+		uni.setStorageSync('URL', 'http://chat.bo5.xyz');
 		let value = uni.getStorageSync('UID');
 		if (!value) {
 			uni.reLaunch({
@@ -22,10 +22,6 @@ export default {
 	},
 	onShow: function() {
 		console.log('App Show');
-		// let that = this;
-		// if (that.$store.getters.sendMsgStatus) {
-		// 	that.$store.dispatch('webSocketInit');
-		// }
 	},
 	onHide: function() {
 		console.log('App Hide');

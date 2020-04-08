@@ -3,7 +3,7 @@
 		<uni-list v-for="g in GroupList" :key="g.id" class="pg_list_cell_left">
 			<uni-list-item :showArrow="false" @tap="chat(g.id, g.Name)">
 				<template v-slot:right="">
-					<image style="width: 40px;height: 40px;" :src="image(g.icon)" mode="widthFix"></image>
+					<image style="width: 30px;height: 30px;" :src="image(g.icon)" mode="widthFix"></image>
 				</template>
 				{{ g.Name }}
 			</uni-list-item>
@@ -37,7 +37,8 @@ export default {
 	methods: {
 		chat(id, name) {
 			uni.navigateTo({
-				url: '../../../chat/Group?id=' + id + '&name=' + name
+				// url: '../../../chat/Group?id=' + id + '&name=' + name
+				url:'../../../chat/Groupim?id=' + id + '&name=' + name
 			});
 		},
 		loadfriend() {
