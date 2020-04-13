@@ -1,7 +1,7 @@
 # 基于uniapp实现聊天程序
 ## 目前实现功能
 - 登录注册
-- 添加好友/群
+- 添加好友/创建群
 - 加入群
 - 单聊
 - 群聊
@@ -9,16 +9,46 @@
 - 上传头像
 - 消息震动
 - 发送表情
-- 
+- 图片消息
+- 验证码
+- 语音消息
 
 ## 待修改
-- 列表头像问题
+- 列表头像问题(样式)
+- 添加好友页面样式
+- 添加群页面样式
+- 语音消息bug->播放一个语音后立即切换另外一个没有声音 或 有时播放不出声音
+
+## 待做
+- 优化图片加载缓慢问题->考虑用略缩图或用占位图
+- 消息持久化(进行中)
+- 列表消息气泡(待定)
+- 文字过滤(待定)
+- 后台
+- 后续待添加
 
 ## 使用说明
 首次使用
 ```
 1.修改 App.vue 中 ws 和 url 信息
 ```
+
+## 群监听消息位置
+```vue
+
+'SocketState.groupChat': function(val) {
+			let State = this.$store.state.SocketState.groupChat;
+			for (var i = 0; i < val.length; i++) {
+				if (val[i].dstid == this.dstid) {
+					this.screenMsg(val[i]);
+					State.splice(i, 1);
+					this.$store.state.SocketState.groupChat = State;
+				}
+			}
+		}
+
+```
+
 
 ## 服务端
 ```

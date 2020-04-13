@@ -9,6 +9,11 @@
 				<text class="title">密码：</text>
 				<m-input type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
 			</view>
+			<view class="input-row border">
+				<text class="title">验证码：</text>
+				<m-input type="Captcha" displayable v-model="code" placeholder="请输入验证码"></m-input>
+				<image :src="ico" mode="" @tap='initCaptcha' class="captcha"></image>
+			</view>
 		</view>
 		<view class="btn-row"><button type="primary" class="primary" @tap="register">注册</button></view>
 	</view>
@@ -26,9 +31,36 @@ export default {
 		return {
 			account: '',
 			password: '',
+			ico: '',
+			code: '',
+			id: ''
 		};
 	},
+	onLoad() {
+		this.initCaptcha();
+	},
 	methods: {
+		initCaptcha() {
+			uni.request({
+				url: uni.getStorageSync('URL') + '/getCaptcha',
+				method: 'POST',
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
+				},
+				success: res => {
+					if (res.data.code == 200) {
+						this.ico = res.data.data;
+						this.id = res.data.id;
+					} else {
+						uni.showToast({
+							title: res.data.msg,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				}
+			});
+		},
 		register() {
 			/**
 			 * 客户端对账号信息进行一些必要的校验。
@@ -48,12 +80,21 @@ export default {
 				});
 				return;
 			}
+			if (this.code.length < 1) {
+				uni.showToast({
+					icon: 'none',
+					title: '验证码最短为 1 个字符'
+				});
+				return;
+			}
 			uni.request({
 				url: uni.getStorageSync('URL') + '/user/register',
 				method: 'POST',
 				data: {
 					mobile: this.account,
-					passwd: this.password
+					passwd: this.password,
+					uuid:this.id,
+					code:this.code
 				},
 				header: {
 					'content-type': 'application/x-www-form-urlencoded'
@@ -70,7 +111,7 @@ export default {
 					} else {
 						uni.showToast({
 							title: res.data.msg,
-							icon:'none',
+							icon: 'none',
 							duration: 2000
 						});
 					}
@@ -81,4 +122,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+	.captcha{
+		height: 100upx;
+		width: 300upx;
+	}
+</style>

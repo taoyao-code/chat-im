@@ -14,6 +14,9 @@
 				</view>
 			</uni-list-item>
 			<uni-list-item title="" :show-arrow="true">
+				<text class="pg_list_cell_left">ID:{{ userInfo.id }}</text>
+			</uni-list-item>
+			<uni-list-item title="" :show-arrow="true">
 				<text class="pg_list_cell_left">昵称:{{ userInfo.nickname }}</text>
 			</uni-list-item>
 			<!-- <uni-list-item title="" :show-arrow="true"><text class="pg_list_cell_left">用户名:{{userInfo.username}}</text></uni-list-item> -->
@@ -39,7 +42,6 @@ import uniList from '@/components/uni-list/uni-list.vue';
 import uniListItem from '@/components/uni-list-item/uni-list-item.vue';
 import avatar from '@/components/yq-avatar/yq-avatar.vue';
 
-// user
 // import UserApi from '@/pages/user/service/UserApi.js'
 // import UserManager from '@/pages/user/logical/UserManager.js'
 // import UserJumpHelper from '@/pages/user/helper/UserJumpHelper.js'
@@ -53,6 +55,7 @@ export default {
 	data() {
 		return {
 			userInfo: {
+				id:0,
 				username: '',
 				nickname: '',
 				avatar: ''
@@ -61,6 +64,7 @@ export default {
 		};
 	},
 	onLoad() {
+		this.userInfo.id = uni.getStorageSync('UID');
 		this.userInfo.username = uni.getStorageSync('mobile');
 		this.userInfo.nickname = uni.getStorageSync('nickname');
 		this.userInfo.avatar = uni.getStorageSync('avatar');

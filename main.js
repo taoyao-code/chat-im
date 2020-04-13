@@ -1,19 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 
-// import {
-// 	MessageBox
-// } from 'element-ui';
-
-// Vue.use(MessageBox);
-// import ElementUI from 'element-ui';
-// import 'element-ui/lib/theme-chalk/index.css';
-// Vue.use(ElementUI);
-
-
-
 Vue.config.productionTip = false
-
 import {
 	df
 } from './common/request/request-downFiles.js';
