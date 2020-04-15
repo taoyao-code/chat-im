@@ -67,6 +67,9 @@ export default new Vuex.Store({
 					res = JSON.parse(res.data);
 					// 追加
 					var obj = {};
+					if(res.cmd == 0){
+						return
+					}				
 					switch (res.cmd) {
 						case 10:
 							var key = "chartPage"; // 10 单聊 /key:响应界面
@@ -113,7 +116,7 @@ export default new Vuex.Store({
 			const payload = {
 				uid: that.state.uid,
 				token: that.state.token,
-				type: 1
+				cmd: 1
 			};
 			that.commit('webSocketSend', payload);
 			that.state.webSocketIsOpen = true
@@ -154,7 +157,7 @@ export default new Vuex.Store({
 				}
 				// console.log("心跳");
 				const payload = {
-					type: 0
+					cmd: 0
 				};
 				that.commit('webSocketSend', payload);
 				// clearTimeout(that.state.webSocketPingTimer);

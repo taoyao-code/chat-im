@@ -48,7 +48,7 @@ export default {
 					'content-type': 'application/x-www-form-urlencoded'
 				},
 				success: res => {
-					if (res.data.code == 200) {
+					if (res.data.code == 0) {
 						this.ico = res.data.data;
 						this.id = res.data.id;
 					} else {

@@ -23,7 +23,7 @@
 				</view> -->
 					<view class="row" v-for="(row, index) in msgList" :key="index" :id="'msg' + row.userid">
 						<!-- 系统消息 -->
-						<!-- <block v-if="row.type == 'system'"> -->
+						<!-- <block v-if="row.type == 1"> -->
 						<!-- <view class="system"> -->
 						<!-- 文字消息 -->
 						<!-- <view v-if="row.msg.type == 'text'" class="text">{{ row.msg.content.text }}</view> -->
@@ -35,7 +35,7 @@
 						</view>
 					</block> -->
 						<!-- 用户消息 -->
-						<block v-if="row.type == 'user'">
+						<block v-if="row.type == 2">
 							<!-- 自己发出的消息 -->
 							<view class="my" v-if="row.userid == myuid">
 								<!-- 左-消息 -->
@@ -43,14 +43,14 @@
 									<!-- 文字消息 -->
 									<view v-if="row.media == 1" class="bubble"><rich-text :nodes="row.content"></rich-text></view>
 									<!-- 语言消息 -->
-									<!-- <view v-if="row.msg.type == 'voice'" class="bubble voice" @tap="playVoice(row.msg)" :class="playMsgid == row.msg.id ? 'play' : ''">
-									<view class="length">{{ row.msg.content.length }}</view>
-									<view class="icon my-voice"></view>
-								</view> -->
+									<view v-if="row.media == 3" class="bubble voice" @tap="playVoice(row.url, index)" :class="playMsgid == index ? 'play' : ''">
+										<view class="length">{{ row.amount }}</view>
+										<view class="icon my-voice"></view>
+									</view>
 									<!-- 图片消息 -->
 									<view v-if="row.media == 4" class="bubble img" @tap="showPic(row.url)">
 										<!-- <image :src="row.url" :style="{ width: row.msg.content.w + 'px', height: row.msg.content.h + 'px' }"></image> -->
-										<image :src="row.url" mode="aspectFill"></image>
+										<image :src="row.url" mode="aspectFill" lazy-load @load="onImageLoad('msgList', index)" @error="onImageError('msgList', index)"></image>
 									</view>
 									<!-- 红包 -->
 									<!-- <view v-if="row.msg.type == 'redEnvelope'" class="bubble red-envelope" @tap="openRedEnvelope(row.msg, index)">
@@ -77,10 +77,10 @@
 									<!-- 文字消息 -->
 									<view v-if="row.media == 1" class="bubble"><rich-text :nodes="row.content"></rich-text></view>
 									<!-- 语音消息 -->
-									<!-- <view v-if="row.msg.type == 'voice'" class="bubble voice" @tap="playVoice(row.msg)" :class="playMsgid == row.msg.id ? 'play' : ''">
-									<view class="icon other-voice"></view>
-									<view class="length">{{ row.msg.content.length }}</view>
-								</view> -->
+									<view v-if="row.media == 3" class="bubble voice" @tap="playVoice(row.url, index)" :class="playMsgid == index ? 'play' : ''">
+										<view class="icon other-voice"></view>
+										<view class="length">{{ row.amount }}</view>
+									</view>
 									<!-- 图片消息 -->
 									<view v-if="row.media == 4" class="bubble img" @tap="showPic(row.url)">
 										<!-- <image :src="row.msg.content.url" :style="{ width: row.msg.content.w + 'px', height: row.msg.content.h + 'px' }"></image> -->
@@ -209,8 +209,11 @@ export default {
 			scrollAnimation: false,
 			scrollTop: 0,
 			scrollToView: '',
+			total: 0,
 			msgList: [],
 			msgImgList: [],
+			pagefrom: 1, // 当前页
+			pagesize: 20, // 每页大小
 			myuid: 0,
 			dstid: 0, //对方ID
 			toName: '', // 对方名称
@@ -350,7 +353,7 @@ export default {
 		// 接受消息(筛选处理)
 		screenMsg(msg) {
 			//从长连接处转发给这个方法，进行筛选处理
-			if (msg.type == 'system') {
+			if (msg.type == 1) {
 				// 系统消息
 				switch (msg.media) {
 					case TEXT:
@@ -360,7 +363,7 @@ export default {
 						this.addSystemRedEnvelopeMsg(msg);
 						break;
 				}
-			} else if (msg.type == 'user') {
+			} else if (msg.type == 2) {
 				// 用户消息
 				switch (msg.media) {
 					case TEXT:
@@ -386,6 +389,7 @@ export default {
 					}
 				}
 			}
+			// 滚动到底部
 			this.isScrollBottom();
 		},
 		//触发滑动到顶部(加载历史信息记录)
@@ -394,13 +398,7 @@ export default {
 		getMsgList() {
 			// // 消息列表
 			// let list = [];
-			// // 获取消息中的图片,并处理显示尺寸
-			// for (let i = 0; i < list.length; i++) {
-			// 	if (list[i].type == 'user' && list[i].msg.type == 'img') {
-			// 		list[i].msg.content = this.setPicSize(list[i].msg.content);
-			// 		this.msgImgList.push(list[i].msg.content.url);
-			// 	}
-			// }
+
 			// this.msgList = list;
 			// // 滚动到底部
 			// this.$nextTick(function() {
@@ -410,6 +408,37 @@ export default {
 			// 		this.scrollAnimation = true;
 			// 	});
 			// });
+
+			// 获取记录列表
+			uni.request({
+				url: uni.getStorageSync('URL') + '/message/chathistory',
+				method: 'POST',
+				header: {
+					'content-type': 'application/x-www-form-urlencoded'
+				},
+				data: {
+					userid: this.myuid,
+					dstid: this.dstid,
+					cmd: CMD,
+					pagefrom: this.pagefrom,
+					pagesize: this.pagesize
+				},
+				success: res => {
+					if (res.data.code == 0) {
+						// 获取消息中的图片,并处理显示尺寸
+						let list = res.data.rows;
+						for (let i = res.data.total; i > 0; i--) {
+							if (list[i - 1].type == 2 && list[i - 1].media == IMG) {
+								list[i - 1].url = this.imageUrl(list[i - 1].url);
+								this.msgImgList.push(list[i - 1].url);
+							}
+							this.msgList.push(list[i - 1]);
+						}
+						this.total = res.data.total;
+					}
+				}
+			});
+			this.isScrollBottom();
 		},
 		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
 		setPicSize(content) {
@@ -476,22 +505,22 @@ export default {
 							url: uni.getStorageSync('URL') + '/attach/upload', //仅为示例，非真实的接口地址
 							filePath: res.tempFilePaths[i],
 							name: 'file',
+							sizeType: ['compressed'], 
 							success: r => {
 								let ret = JSON.parse(r.data);
 								if (ret.code == 0) {
 									// {id:1,userid:2,dstid:3,cmd:10,media:4,url:"http://www.baidu.com/a/log,jpg"}
-									let imageUrl = uni.getStorageSync('ImageURL') + ret.data;
 									var nowDate = new Date();
 									let msg = {
 										userid: this.myuid,
 										dstid: parseInt(this.dstid),
 										cmd: CMD,
 										media: IMG,
-										url: imageUrl,
+										url: ret.data,
 										time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-										type: 'user',
-										username: '大黑哥',
-										face: '/static/img/face.jpg'
+										type: 2,
+										username: uni.getStorageSync('nickname'),
+										face: uni.getStorageSync('avatar')
 									};
 									this.sendMsg(msg);
 								} else {
@@ -573,9 +602,9 @@ export default {
 				media: TEXT,
 				content: content,
 				time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-				type: 'user',
-				username: '大黑哥',
-				face: '/static/img/face.jpg'
+				type: 2,
+				username: uni.getStorageSync('nickname'),
+				face: uni.getStorageSync('avatar')
 			};
 			this.sendMsg(msg);
 			this.textMsg = ''; //清空输入框
@@ -606,9 +635,9 @@ export default {
 				media: TEXT,
 				content: content,
 				time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-				type: 'user',
-				username: '大黑哥',
-				face: '/static/img/face.jpg'
+				type: 2,
+				username: uni.getStorageSync('nickname'),
+				face: uni.getStorageSync('avatar')
 			};
 
 			this.sendMsg(msg);
@@ -637,12 +666,11 @@ export default {
 		// 发送消息
 		sendMsg(msg) {
 			//实际应用中，此处应该提交长连接，模板仅做本地处理。
-
 			this.$store.commit('webSocketSend', msg);
 			// 发送消息到接收消息
 			// this.screenMsg(msg);
-			
 			// 定时器模拟对方回复,三秒
+
 			// setTimeout(() => {
 			// 	lastid = this.msgList[this.msgList.length - 1].msg.id;
 			// 	lastid++;
@@ -672,6 +700,7 @@ export default {
 		// 添加图片消息到列表
 		addImgMsg(msg) {
 			// msg.content = this.setPicSize(msg.content);
+			msg.url = this.imageUrl(msg.url);
 			this.msgImgList.push(msg.url);
 			this.msgList.push(msg);
 		},
@@ -699,7 +728,7 @@ export default {
 				if (rid == 0) {
 					this.redenvelopeData = {
 						rid: 0, //红包ID
-						from: '大黑哥',
+						from: uni.getStorageSync('nickname'),
 						face: '/static/img/im/face/face.jpg',
 						blessing: '恭喜发财，大吉大利',
 						money: '已领完'
@@ -751,9 +780,9 @@ export default {
 			});
 		},
 		// 播放语音
-		playVoice(msg) {
-			this.playMsgid = msg.id;
-			this.AUDIO.src = msg.url;
+		playVoice(url, index) {
+			this.playMsgid = index;
+			this.AUDIO.src = url;
 			this.$nextTick(function() {
 				this.AUDIO.play();
 			});
@@ -813,17 +842,52 @@ export default {
 		recordEnd(e) {
 			clearInterval(this.recordTimer);
 			if (!this.willStop) {
-				// console.log("e: " + JSON.stringify(e));
-				let msg = {
-					length: 0,
-					url: e.tempFilePath
-				};
+				// console.log('e: ' + JSON.stringify(e));
+				// let msg = {
+				// 	length: 0,
+				// 	url: e.tempFilePath
+				// };
+				// // 上传图片
 				let min = parseInt(this.recordLength / 60);
 				let sec = this.recordLength % 60;
 				min = min < 10 ? '0' + min : min;
 				sec = sec < 10 ? '0' + sec : sec;
-				msg.length = min + ':' + sec;
-				this.sendMsg(msg, 'voice');
+				if (min == '00' && sec == '00') {
+					// 长度都为0
+					return false;
+				}
+				uni.uploadFile({
+					url: uni.getStorageSync('URL') + '/attach/upload',
+					filePath: e.tempFilePath,
+					name: 'file',
+					success: r => {
+						let ret = JSON.parse(r.data);
+						if (ret.code == 0) {
+							// {id:1,userid:2,dstid:3,cmd:10,media:4,url:"http://www.baidu.com/a/log,jpg"}
+							var nowDate = new Date();
+							let msg = {
+								userid: this.myuid,
+								dstid: parseInt(this.dstid),
+								cmd: CMD,
+								media: VOICE,
+								url: ret.data,
+								amount: 0,
+								time: nowDate.getHours() + ':' + nowDate.getMinutes(),
+								type: 2,
+								username: uni.getStorageSync('nickname'),
+								face: uni.getStorageSync('avatar')
+							};
+							msg.amount = min + ':' + sec;
+							this.sendMsg(msg);
+						} else {
+							uni.showToast({
+								title: ret.msg,
+								duration: 2000
+							});
+						}
+					}
+				});
+				// this.sendMsg(msg, 'voice');
 			} else {
 				// console.log('取消发送录音');
 			}
@@ -836,6 +900,21 @@ export default {
 		},
 		discard() {
 			return;
+		},
+		//监听image加载完成
+		onImageLoad(key, index) {
+			this.$set(this[key][index], 'loaded', 'loaded');
+		},
+		//监听image加载失败
+		onImageError(key, index) {
+			this[key][index].DefaultPicURL = '/static/img/errorImage.jpg';
+		},
+		imageUrl(url) {
+			if (url.substring(0, 4) == 'http') {
+				return url;
+			} else {
+				return uni.getStorageSync('ImageURL') + url;
+			}
 		}
 	}
 };

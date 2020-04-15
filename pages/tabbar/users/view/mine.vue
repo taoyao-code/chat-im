@@ -78,16 +78,14 @@ export default {
 			let self = this;
 			this.userInfo.avatar = res.path;
 			uni.uploadFile({
-				url: uni.getStorageSync('URL') + '/attach/upload', //仅为示例，非真实的接口地址
+				url: uni.getStorageSync('URL') + '/attach/upload',
 				filePath: res.path,
 				name: 'file',
-				// formData: {
-				// 	id: uni.getStorageSync('UID'),// 暂时无用
-				// },
+				count:1,
+				sizeType:['compressed'],
 				success: (r) => {
 					let ret = JSON.parse(r.data);
 					if(ret.code == 0){
-						// self.userInfo.avatar = ret.data;
 						self.updateUser(ret.data)
 					}
 				},fail:err=>{
@@ -140,7 +138,11 @@ export default {
 				},
 				success: res => {
 					if (res.data.code == 0) {
-						uni.setStorageSync('avatar',uni.getStorageSync('URL')+url)
+						if(url.substring(0,4) == 'http'){
+							uni.setStorageSync('avatar',url)
+						}else{
+							uni.setStorageSync('avatar',uni.getStorageSync('URL')+url)
+						}
 					} else {
 						uni.showToast({
 							title: res.data.msg,
