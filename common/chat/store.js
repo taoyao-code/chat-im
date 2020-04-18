@@ -81,7 +81,7 @@ export default new Vuex.Store({
 						case 11:
 							var key = "groupChat"; // 11 群聊
 							uni.$emit('chat_Group_list_add', {
-								dstid: res.userid
+								dstid: res.dstid
 							});
 							break;
 						default:

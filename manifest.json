@@ -60,8 +60,18 @@
     "h5" : {
         "title" : "chat",
         "router" : {
-            "mode" : "history"
+            "mode" : "hash"
         },
-        "domain" : "http://doc.bo5.xyz"
+        "domain" : "http://doc.bo5.xyz",
+        "proxy" : {
+            "/" : {
+                "target" : "http://chat.bo5.xyz",
+                "changeOrigin" : true,
+                "ws" : true,
+                "pathRewrite" : {
+                    "^/" : ""
+                }
+            }
+        }
     }
 }

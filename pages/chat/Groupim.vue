@@ -311,7 +311,7 @@ export default {
 		var pages = getCurrentPages();
 		var currPage = pages[pages.length - 1]; //当前页面
 		var prevPage = pages[pages.length - 2]; //上一个页面
-		prevPage.GroupList[this.index].num = 0; // 将上一页的消息设为0
+		prevPage.GroupList[this.index].num = '0'; // 将上一页的消息设为0
 	},
 	watch: {
 		'SocketState.groupChat': function(val) {

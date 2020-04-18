@@ -51,7 +51,7 @@ export default {
 		uni.$once('FriendsList');
 	},
 	methods: {
-		chat(id, name) {
+		chat(id, name,index) {
 			uni.navigateTo({
 				url: '../../../chat/Groupim?id=' + id + '&name=' + name+'&index='+index,
 				success: res => {
