@@ -1,8 +1,7 @@
 <template>
 	<view>
-		<!--   user.avatar -->
-		<uni-list v-for="user in UserList" :key="user.id" class="pg_list_cell_left">
-			<uni-list-item thumb="https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png" @tap="chat(user.id,user.nickname)">{{ user.nickname }}</uni-list-item>
+		<uni-list v-for="(user,index) in UserList" :key="user.id" class="pg_list_cell_left">
+			<uni-list-item :thumb="imageURL(user.avatar)" :show-badge="true" :badge-text="nums(user.num)" @tap="chat(user.id, user.nickname,index)">{{ user.nickname }}</uni-list-item>
 		</uni-list>
 	</view>
 </template>
@@ -19,28 +18,48 @@ export default {
 		};
 	},
 	onLoad() {
-		let that = this
+		let that = this;
 		that.loadfriend();
 		uni.$on('FriendsList', function(res) {
-			that.loadfriend()
+			that.loadfriend();
+		});
+		// 好友发送过来的数据量状态增加
+		uni.$on('chat_user_list_add', function(res) {
+			var user_liset = that.UserList;
+			for (var i = 0; i < user_liset.length; i++) {
+				if (user_liset[i].id == res.dstid) {
+					if(user_liset[i].num == '0'){
+						user_liset[i].num = '1';
+					}else{
+						user_liset[i].num = (parseInt(user_liset[i].num) + 1)+'';
+					}
+				}
+			}
+			that.UserList = user_liset
 		});
 	},
-	onShow() {},
-	onUnload(){
+	onShow() {
+		let that = this;
+	},
+	onUnload() {
 		// 事件卸载
-		uni.$once('FriendsList')
+		uni.$once('FriendsList');
+		uni.$once('chat_user_list_add');
 	},
 	methods: {
-		chat(id,name) {
+		chat(id, name,index) {
 			uni.navigateTo({
-				url:'../../chat/chatim?id=' + id+'&name='+name
-				// url: '../../chat/chat?id=' + id+'&name='+name
+				url: '../../chat/chatim?id=' + id + '&name=' + name+'&index='+index,
+				success: res => {
+					// 将当前消息值设为 0
+					this.UserList[index].num = '0'
+				},
 			});
 		},
 		loadfriend() {
 			// 好友列表
 			uni.request({
-				url: uni.getStorageSync('URL')+'/contact/loadfriend',
+				url: uni.getStorageSync('URL') + '/contact/loadfriend',
 				method: 'POST',
 				data: {
 					userid: uni.getStorageSync('UID')
@@ -49,12 +68,27 @@ export default {
 					'content-type': 'application/x-www-form-urlencoded'
 				},
 				success: res => {
-					this.UserList = res.data.rows;
+					let reslut = res.data.rows
+					for (let i = 0; i < reslut.length; i++) {
+						reslut[i]['num'] = '0'
+					}
+					this.UserList = reslut;
 				}
 			});
 		},
-		image(url){
-			return uni.getStorageSync('URL')+url;
+		imageURL(url) {
+			if (url.substring(0, 4) == 'http') {
+				return url;
+			} else {
+				return uni.getStorageSync('URL') + url;
+			}
+		},
+		nums(n){
+			if(n == 0 || n == '0'){
+				return ''
+			}else{
+				return n
+			}
 		}
 	}
 };

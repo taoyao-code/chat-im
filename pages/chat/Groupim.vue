@@ -253,13 +253,15 @@ export default {
 				face: null,
 				blessing: null,
 				money: null
-			}
+			},
+			index: '' // 列表下标
 		};
 	},
 	onLoad(option) {
 		this.myuid = uni.getStorageSync('UID');
 		this.dstid = option.id;
 		this.toName = option.name;
+		this.index = option.index;
 		// 设置标题
 		uni.setNavigationBarTitle({
 			title: this.toName + ''
@@ -298,6 +300,19 @@ export default {
 		});
 	},
 	onShow() {},
+	onNavigationBarButtonTap() {
+		// 监听原生标题栏按钮点击事件，参数为Object
+		uni.showToast({
+			title: '标题',
+			duration: 2000
+		});
+	},
+	onBackPress() {
+		var pages = getCurrentPages();
+		var currPage = pages[pages.length - 1]; //当前页面
+		var prevPage = pages[pages.length - 2]; //上一个页面
+		prevPage.GroupList[this.index].num = 0; // 将上一页的消息设为0
+	},
 	watch: {
 		'SocketState.groupChat': function(val) {
 			let State = this.$store.state.SocketState.groupChat;
@@ -505,7 +520,7 @@ export default {
 							url: uni.getStorageSync('URL') + '/attach/upload', //仅为示例，非真实的接口地址
 							filePath: res.tempFilePaths[i],
 							name: 'file',
-							sizeType: ['compressed'], 
+							sizeType: ['compressed'],
 							success: r => {
 								let ret = JSON.parse(r.data);
 								if (ret.code == 0) {

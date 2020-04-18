@@ -67,15 +67,22 @@ export default new Vuex.Store({
 					res = JSON.parse(res.data);
 					// 追加
 					var obj = {};
-					if(res.cmd == 0){
+					if (res.cmd == 0) {
 						return
-					}				
+					}
 					switch (res.cmd) {
 						case 10:
 							var key = "chartPage"; // 10 单聊 /key:响应界面
+							// 发送数据到好友列表页，增加消息量
+							uni.$emit('chat_user_list_add', {
+								dstid: res.userid
+							});
 							break;
 						case 11:
 							var key = "groupChat"; // 11 群聊
+							uni.$emit('chat_Group_list_add', {
+								dstid: res.userid
+							});
 							break;
 						default:
 							break;
