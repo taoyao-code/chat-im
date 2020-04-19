@@ -5,6 +5,8 @@ export default {
 		uni.setStorageSync('URL', 'http://localhost:8081');
 		uni.setStorageSync('ImageURL', 'http://localhost:8081/');
 		
+		
+						
 		let value = uni.getStorageSync('UID');
 		if (!value) {
 			uni.reLaunch({
