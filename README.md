@@ -30,9 +30,10 @@
 ```
 1.修改 App.vue 中 ws 和 url 信息
 ```
-##体验地址：
-Android:[Android](http://doc.bo5.xyz/Android-chat-im.apk)
-H5:[chat-im](http://doc.bo5.xyz/)
+## 体验地址：
+#### Android:[Android](http://doc.bo5.xyz/Android-chat-im.apk)
+
+#### H5:[chat-im](http://doc.bo5.xyz/)
 
 ### 后端代码
 [Go-im](https://github.com/ltsj404/Go-im)
