@@ -264,7 +264,7 @@ export default {
 		this.index = option.index;
 		// 设置标题
 		uni.setNavigationBarTitle({
-			title: this.toName + ''
+			title: this.toName + '-id:'+this.dstid
 		});
 		this.getMsgList();
 		//语音自然播放结束

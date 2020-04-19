@@ -1,13 +1,13 @@
 <template>
 	<view class="m-input-view">
-		<input :focus="focus_" :type="inputType" :value="value" @input="onInput" class="m-input-input" :placeholder="placeholder"
+		<input :focus="focus" :type="inputType" :value="value" @input="onInput" class="m-input-input" :placeholder="placeholder"
 		 :password="type==='password'&&!showPassword" @focus="onFocus" @blur="onBlur" />
 		<!-- 优先显示密码可见按钮 -->
-		<view v-if="clearable_&&!displayable_&&value.length" class="m-input-icon">
-			<m-icon color="#666666" type="clear" size="20" @click="clear"></m-icon>
+		<view v-if="clearable&&!displayable&&value.length" class="m-input-icon">
+			<m-icon color="#666666" type="clear" @click="clear"></m-icon>
 		</view>
-		<view v-if="displayable_" class="m-input-icon">
-			<m-icon :color="showPassword?'#666666':'#cccccc'" type="eye" size="20" @click="display"></m-icon>
+		<view v-if="displayable" class="m-input-icon">
+			<m-icon :style="{color:showPassword?'#666666':'#cccccc'}" type="eye" @click="display"></m-icon>
 		</view>
 	</view>
 </template>
@@ -74,15 +74,6 @@
 			inputType() {
 				const type = this.type
 				return type === 'password' ? 'text' : type
-			},
-			clearable_() {
-				return String(this.clearable) !== 'false'
-			},
-			displayable_() {
-				return String(this.displayable) !== 'false'
-			},
-			focus_() {
-				return String(this.focus) !== 'false'
 			}
 		},
 		methods: {
@@ -101,7 +92,7 @@
 				})
 			},
 			onInput(e) {
-				this.$emit('input', e.target.value)
+				this.$emit('input', e.detail.value)
 			}
 		}
 	}
@@ -109,20 +100,26 @@
 
 <style>
 	.m-input-view {
-		display: flex;
+		display: inline-flex;
 		flex-direction: row;
 		align-items: center;
-		width: 100%;
+		/* width: 100%; */
 		flex: 1;
-		padding: 0 10rpx;
+		padding: 0 10px;
 	}
 
 	.m-input-input {
 		flex: 1;
 		width: 100%;
+		min-height: 100%;
+		line-height: inherit;
+		background-color: rgba(0, 0, 0, 0);
 	}
 
 	.m-input-icon {
 		width: 20px;
+		font-size: 20px;
+		line-height: 20px;
+		color: #666666;
 	}
 </style>

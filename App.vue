@@ -4,6 +4,7 @@ export default {
 		uni.setStorageSync('WS', 'ws://localhost:8081');
 		uni.setStorageSync('URL', 'http://localhost:8081');
 		uni.setStorageSync('ImageURL', 'http://localhost:8081/');
+		
 		let value = uni.getStorageSync('UID');
 		if (!value) {
 			uni.reLaunch({
@@ -29,7 +30,6 @@ export default {
 	}
 };
 </script>
-
 <style>
-/*每个页面公共css */
+	
 </style>

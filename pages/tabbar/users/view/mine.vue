@@ -118,8 +118,7 @@ export default {
 				cmd: 1,
 			};
 			this.$store.commit('webSocketSend', msg);
-			uni.removeStorageSync('UID');
-			uni.removeStorageSync('Token');
+			uni.clearStorageSync();
 			// 账号退出
 			uni.reLaunch({
 				url: '../../../login/login'

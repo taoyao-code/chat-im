@@ -6,7 +6,6 @@
                 <m-input type="text" focus clearable v-model="email" placeholder="请输入邮箱"></m-input>
             </view>
         </view>
-
         <view class="btn-row">
             <button type="primary" class="primary" @tap="findPassword">提交</button>
         </view>
