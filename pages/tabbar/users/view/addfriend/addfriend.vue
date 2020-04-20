@@ -50,7 +50,7 @@ export default {
 							duration: 2000
 						});
 						let msg = {
-							dstid: this.dstid,
+							dstid: parseInt(this.dstid),
 							cmd: 9,
 						};
 						this.$store.commit('webSocketSend', msg);
