@@ -299,7 +299,9 @@ export default {
 			this.isScrollBottom();
 		});
 	},
-	onShow() {},
+	onShow() {
+		this.isScrollBottom();
+	},
 	onNavigationBarButtonTap() {
 		// 监听原生标题栏按钮点击事件，参数为Object
 		uni.showToast({

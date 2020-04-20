@@ -5,7 +5,7 @@ export default {
 		uni.setStorageSync('URL', 'http://localhost:8081');
 		uni.setStorageSync('ImageURL', 'http://localhost:8081/');
 		
-		
+
 						
 		let value = uni.getStorageSync('UID');
 		if (!value) {
@@ -20,6 +20,18 @@ export default {
 			this.$store.commit('setUrl', uni.getStorageSync('WS') + '/chat?id=' + uid + '&token=' + token);
 			this.$store.dispatch('webSocketInit'); // 初始化ws
 		}
+		uni.$on('Reconnect_sign_out', function(res) {
+			// ws连接失败，重新登录
+			uni.showToast({
+			    title: '连接失败，请重新登录',
+				icon:'none',
+			    duration: 2000
+			});
+			uni.removeStorageSync('UID');
+			uni.reLaunch({
+				url: './pages/login/login'
+			});
+		});
 	},
 	onShow: function() {
 		console.log('App Show');

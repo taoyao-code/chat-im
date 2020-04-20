@@ -118,7 +118,7 @@ export default {
 				cmd: 1,
 			};
 			this.$store.commit('webSocketSend', msg);
-			uni.clearStorageSync();
+			uni.removeStorageSync('UID');
 			// 账号退出
 			uni.reLaunch({
 				url: '../../../login/login'
@@ -180,6 +180,13 @@ export default {
 	background-color: #f8f8f8;
 	border-radius: 50%;
 	/*border-radius: 100%;*/
+}
+uni-image>img{
+	width: 100rpx;
+	height: 100rpx;
+	border: 1px solid red;
+	background-color: #f8f8f8;
+	border-radius: 50%;
 }
 .pg_list_cell_left {
 	font-size: 30rpx;

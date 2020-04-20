@@ -58,9 +58,10 @@
         "usingComponents" : true
     },
     "h5" : {
-        "title" : "chat",
+        "title" : "chat-im",
         "router" : {
-            "mode" : "hash"
+            "mode" : "hash",
+            "base" : "/h5/"
         },
         "domain" : "http://doc.bo5.xyz",
         "proxy" : {

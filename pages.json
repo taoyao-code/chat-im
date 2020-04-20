@@ -1,7 +1,7 @@
 {
 	"pages": [
 		{
-			"path": "pages/tabbar/tabbar-1/tabbar-1",
+			"path": "pages/tabbar/contact/contact",
 			"style": {
 				"navigationBarTitleText": "好友列表"
 			}
@@ -94,7 +94,7 @@
 		"color": "#8F8F94",
 		"selectedColor": "#f33e54",
 		"list": [{
-				"pagePath": "pages/tabbar/tabbar-1/tabbar-1",
+				"pagePath": "pages/tabbar/contact/contact",
 				"iconPath": "static/img/tabbar/home.png",
 				"selectedIconPath": "static/img/tabbar/homeactive.png",
 				"text": "首页"

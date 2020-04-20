@@ -84,8 +84,11 @@ export default new Vuex.Store({
 								dstid: res.dstid
 							});
 							break;
+						case 9:
+							uni.$emit('FriendsList');// 9 通知好友页，有新好友添加
+							return;
 						default:
-							break;
+							return;
 					}
 					obj[key] = res;
 					// end
@@ -183,6 +186,7 @@ export default new Vuex.Store({
 			state.webSocketReconnectCount += 1;
 			// 判断是否到了最大重连次数 
 			if (state.webSocketReconnectCount >= 10) {
+				uni.$emit('Reconnect_sign_out');
 				this.webSocketWarningText = "重连次数超限";
 				return false;
 			}

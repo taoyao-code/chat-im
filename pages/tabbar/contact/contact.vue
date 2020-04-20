@@ -21,6 +21,7 @@ export default {
 		let that = this;
 		that.loadfriend();
 		uni.$on('FriendsList', function(res) {
+			// 监听新添加的好友，并请求新的数据
 			that.loadfriend();
 		});
 		// 好友发送过来的数据量状态增加

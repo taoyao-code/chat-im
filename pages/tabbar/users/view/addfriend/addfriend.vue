@@ -49,6 +49,11 @@ export default {
 							title: '添加成功',
 							duration: 2000
 						});
+						let msg = {
+							dstid: this.dstid,
+							cmd: 9,
+						};
+						this.$store.commit('webSocketSend', msg);
 						setTimeout(function() {
 							uni.navigateBack({
 								delta: 1

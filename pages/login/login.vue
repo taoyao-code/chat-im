@@ -104,7 +104,7 @@ export default {
 						this.$store.commit('setUrl', uni.getStorageSync('WS') + '/chat?id=' + uid + '&token=' + token);
 						this.$store.dispatch('webSocketInit'); // 初始化ws
 						uni.reLaunch({
-							url: '../tabbar/tabbar-1/tabbar-1'
+							url: '../tabbar/contact/contact'
 						});
 					} else {
 						uni.showToast({
