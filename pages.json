@@ -26,16 +26,6 @@
 		    "style": {
 		        "navigationBarTitleText": "找回密码"
 		    }
-		},
-		{
-			"path": "pages/chat/chat",
-			"style": {
-				"app-plus": {
-					"bounce": "none",
-					"softinputNavBar": "none",
-					"softinputMode": "adjustResize"
-				}
-			}
 		}
 	    ,{
             "path" : "pages/tabbar/users/view/addfriend/addfriend",
@@ -58,16 +48,6 @@
         ,{
             "path" : "pages/tabbar/group/ListGroup/ListGroup",
             "style" : {}
-        }
-        ,{
-            "path" : "pages/chat/Group",
-            "style" : {
-				"app-plus": {
-					"bounce": "none",
-					"softinputNavBar": "none",
-					"softinputMode": "adjustResize"
-				}
-			}
         }
         ,{
             "path" : "pages/chat/chatim",

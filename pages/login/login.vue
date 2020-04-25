@@ -69,31 +69,23 @@ export default {
 				account: this.account,
 				password: this.password
 			};
-			uni.request({
-				url: uni.getStorageSync('URL') + '/user/login',
-				method: 'POST',
-				data: {
-					mobile: this.account,
-					passwd: this.password
-				},
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					console.log(res.data.data.token);
-					if (res.data.code == 0) {
+			this.$http
+				.post('/user/login', { mobile: this.account,
+					passwd: this.password })
+				.then(res => {
+					if (res.code == 0) {
 						uni.showToast({
 							title: '登录成功',
 							duration: 2000
 						});
-						let uid = res.data.data.id;
-						let token = res.data.data.token;
+						let uid = res.data.id;
+						let token = res.data.token;
 						uni.setStorageSync('UID', uid + '');
 						uni.setStorageSync('Token', token);
-						uni.setStorageSync('nickname', res.data.data.nickname);
-						uni.setStorageSync('mobile', res.data.data.mobile);
-
-						var avatar = res.data.data.avatar ? res.data.data.avatar : 'https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png';
+						uni.setStorageSync('nickname', res.data.nickname);
+						uni.setStorageSync('mobile', res.data.mobile);
+					
+						var avatar = res.data.avatar ? res.data.avatar : 'https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png';
 						if (avatar.substring(0, 4) == 'http') {
 							uni.setStorageSync('avatar', avatar);
 						} else {
@@ -108,20 +100,15 @@ export default {
 						});
 					} else {
 						uni.showToast({
-							title: res.data.msg,
+							title: res.msg,
 							icon: 'none',
 							duration: 2000
 						});
 					}
-				},
-				fail: () => {
-					uni.showToast({
-						title: '错误',
-						icon: 'none',
-						duration: 2000
-					});
-				}
-			});
+				})
+				.catch(err => {});
+			
+			
 		}
 	},
 	onReady() {

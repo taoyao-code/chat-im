@@ -41,16 +41,12 @@ export default {
 	},
 	methods: {
 		initCaptcha() {
-			uni.request({
-				url: uni.getStorageSync('URL') + '/getCaptcha',
-				method: 'POST',
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					if (res.data.code == 0) {
-						this.ico = res.data.data;
-						this.id = res.data.id;
+			this.$http
+				.post('/getCaptcha')
+				.then(res => {
+					if (res.code == 0) {
+						this.ico = res.data;
+						this.id = res.id;
 					} else {
 						uni.showToast({
 							title: res.data.msg,
@@ -58,8 +54,8 @@ export default {
 							duration: 2000
 						});
 					}
-				}
-			});
+				})
+				.catch(err => {});
 		},
 		register() {
 			/**
@@ -87,20 +83,10 @@ export default {
 				});
 				return;
 			}
-			uni.request({
-				url: uni.getStorageSync('URL') + '/user/register',
-				method: 'POST',
-				data: {
-					mobile: this.account,
-					passwd: this.password,
-					uuid: this.id,
-					code: this.code
-				},
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					if (res.data.code == 0) {
+			this.$http
+				.post('/user/register', { mobile: this.account, passwd: this.password, uuid: this.id, code: this.code })
+				.then(res => {
+					if (res.code == 0) {
 						uni.showToast({
 							title: '注册成功',
 							duration: 2000
@@ -110,13 +96,13 @@ export default {
 						});
 					} else {
 						uni.showToast({
-							title: res.data.msg,
+							title: res.msg,
 							icon: 'none',
 							duration: 2000
 						});
 					}
-				}
-			});
+				})
+				.catch(err => {});
 		}
 	}
 };

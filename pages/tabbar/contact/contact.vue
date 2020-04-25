@@ -1,7 +1,9 @@
 <template>
 	<view>
-		<uni-list v-for="(user,index) in UserList" :key="user.id" class="pg_list_cell_left">
-			<uni-list-item :thumb="imageURL(user.avatar)" :show-badge="true" :badge-text="nums(user.num)" @tap="chat(user.id, user.nickname,index)">{{ user.nickname }}</uni-list-item>
+		<uni-list v-for="(user, index) in UserList" :key="user.id" class="pg_list_cell_left">
+			<uni-list-item :thumb="imageURL(user.avatar)" :show-badge="true" :badge-text="nums(user.num)" @tap="chat(user.id, user.nickname, index)">
+				{{ user.nickname }}
+			</uni-list-item>
 		</uni-list>
 	</view>
 </template>
@@ -29,14 +31,14 @@ export default {
 			var user_liset = that.UserList;
 			for (var i = 0; i < user_liset.length; i++) {
 				if (user_liset[i].id == res.dstid) {
-					if(user_liset[i].num == '0'){
+					if (user_liset[i].num == '0') {
 						user_liset[i].num = '1';
-					}else{
-						user_liset[i].num = (parseInt(user_liset[i].num) + 1)+'';
+					} else {
+						user_liset[i].num = parseInt(user_liset[i].num) + 1 + '';
 					}
 				}
 			}
-			that.UserList = user_liset
+			that.UserList = user_liset;
 		});
 	},
 	onShow() {
@@ -48,34 +50,29 @@ export default {
 		uni.$once('chat_user_list_add');
 	},
 	methods: {
-		chat(id, name,index) {
+		chat(id, name, index) {
 			uni.navigateTo({
-				url: '../../chat/chatim?id=' + id + '&name=' + name+'&index='+index,
+				url: '../../chat/chatim?id=' + id + '&name=' + name + '&index=' + index,
 				success: res => {
 					// 将当前消息值设为 0
-					this.UserList[index].num = '0'
-				},
+					this.UserList[index].num = '0';
+				}
 			});
 		},
 		loadfriend() {
 			// 好友列表
-			uni.request({
-				url: uni.getStorageSync('URL') + '/contact/loadfriend',
-				method: 'POST',
-				data: {
+			this.$http
+				.post('/contact/loadfriend', {
 					userid: uni.getStorageSync('UID')
-				},
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					let reslut = res.data.rows
+				})
+				.then(res => {
+					let reslut = res.rows;
 					for (let i = 0; i < reslut.length; i++) {
-						reslut[i]['num'] = '0'
+						reslut[i]['num'] = '0';
 					}
 					this.UserList = reslut;
-				}
-			});
+				})
+				.catch(err => {});
 		},
 		imageURL(url) {
 			if (url.substring(0, 4) == 'http') {
@@ -84,11 +81,11 @@ export default {
 				return uni.getStorageSync('URL') + url;
 			}
 		},
-		nums(n){
-			if(n == 0 || n == '0'){
-				return ''
-			}else{
-				return n
+		nums(n) {
+			if (n == 0 || n == '0') {
+				return '';
+			} else {
+				return n;
 			}
 		}
 	}

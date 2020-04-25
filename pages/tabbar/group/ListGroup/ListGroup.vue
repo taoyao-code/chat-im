@@ -9,8 +9,8 @@
 			</uni-list-item>
 			<view style="background-color:#f7f7f7;height:1px;border:none;"></view>
 		</uni-list> -->
-		<uni-list  v-for="(g,index) in GroupList" :key="g.id" class="pg_list_cell_left">
-			<uni-list-item :thumb="imageURL(g.icon)" :show-badge="true" :badge-text="nums(g.num)" @tap="chat(g.id, g.Name,index)">{{ g.Name }}</uni-list-item>
+		<uni-list v-for="(g, index) in GroupList" :key="g.id" class="pg_list_cell_left">
+			<uni-list-item :thumb="imageURL(g.icon)" :show-badge="true" :badge-text="nums(g.num)" @tap="chat(g.id, g.Name, index)">{{ g.Name }}</uni-list-item>
 		</uni-list>
 	</view>
 </template>
@@ -36,14 +36,14 @@ export default {
 			var user_liset = that.GroupList;
 			for (var i = 0; i < user_liset.length; i++) {
 				if (user_liset[i].id == res.dstid) {
-					if(user_liset[i].num == '0'){
+					if (user_liset[i].num == '0') {
 						user_liset[i].num = '1';
-					}else{
-						user_liset[i].num = (parseInt(user_liset[i].num) + 1)+'';
+					} else {
+						user_liset[i].num = parseInt(user_liset[i].num) + 1 + '';
 					}
 				}
 			}
-			that.GroupList = user_liset
+			that.GroupList = user_liset;
 		});
 	},
 	onShow() {},
@@ -51,34 +51,27 @@ export default {
 		uni.$once('FriendsList');
 	},
 	methods: {
-		chat(id, name,index) {
+		chat(id, name, index) {
 			uni.navigateTo({
-				url: '../../../chat/Groupim?id=' + id + '&name=' + name+'&index='+index,
+				url: '../../../chat/Groupim?id=' + id + '&name=' + name + '&index=' + index,
 				success: res => {
 					// 将当前消息值设为 0
-					this.GroupList[index].num = '0'
-				},
+					this.GroupList[index].num = '0';
+				}
 			});
 		},
 		loadfriend() {
 			// 群列表
-			uni.request({
-				url: uni.getStorageSync('URL') + '/contact/loadcommunity',
-				method: 'POST',
-				data: {
-					userid: uni.getStorageSync('UID')
-				},
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					let reslut = res.data.rows
+			this.$http
+				.post('/contact/loadcommunity', { userid: uni.getStorageSync('UID') })
+				.then(res => {
+					let reslut = res.rows;
 					for (let i = 0; i < reslut.length; i++) {
-						reslut[i]['num'] = '0'
+						reslut[i]['num'] = '0';
 					}
 					this.GroupList = reslut;
-				}
-			});
+				})
+				.catch(err => {});
 		},
 		imageURL(url) {
 			if (url.substring(0, 4) == 'http') {
@@ -87,11 +80,11 @@ export default {
 				return uni.getStorageSync('URL') + url;
 			}
 		},
-		nums(n){
-			if(n == 0 || n == '0'){
-				return ''
-			}else{
-				return n
+		nums(n) {
+			if (n == 0 || n == '0') {
+				return '';
+			} else {
+				return n;
 			}
 		}
 	}

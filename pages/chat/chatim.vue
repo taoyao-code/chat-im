@@ -396,7 +396,6 @@ export default {
 						this.addRedEnvelopeMsg(msg);
 						break;
 				}
-				// console.log('用户消息');
 				//非自己的消息震动
 				if (msg.userid != this.myuid) {
 					// console.log('振动');
@@ -414,34 +413,29 @@ export default {
 		// 加载初始页面消息
 		getMsgList() {
 			// 获取记录列表
-			uni.request({
-				url: uni.getStorageSync('URL') + '/message/chathistory',
-				method: 'POST',
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				data: {
+			this.$http
+				.post('/message/chathistory', {
 					userid: this.myuid,
 					dstid: this.dstid,
 					cmd: CMD,
 					pagefrom: this.pagefrom,
 					pagesize: this.pagesize
-				},
-				success: res => {
-					if (res.data.code == 0) {
+				})
+				.then(res => {
+					if (res.code == 0) {
 						// 获取消息中的图片,并处理显示尺寸
-						let list = res.data.rows;
-						for (let i = res.data.total; i > 0; i--) {
+						let list = res.rows;
+						for (let i = res.total; i > 0; i--) {
 							if (list[i - 1].type == 2 && list[i - 1].media == IMG) {
 								list[i - 1].url = this.imageUrl(list[i - 1].url);
 								this.msgImgList.push(list[i - 1].url);
 							}
 							this.msgList.push(list[i - 1]);
 						}
-						this.total = res.data.total;
+						this.total = res.total;
 					}
-				}
-			});
+				})
+				.catch(err => {});
 		},
 		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
 		setPicSize(content) {

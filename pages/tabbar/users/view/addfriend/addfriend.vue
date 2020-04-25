@@ -31,18 +31,13 @@ export default {
 				return;
 			}
 			// 添加好友
-			uni.request({
-				url: uni.getStorageSync('URL') + '/contact/addfriend',
-				method: 'POST',
-				data: {
+			this.$http
+				.post('/contact/addfriend', {
 					dstid: this.dstid, // 用户ID
 					userid: this.userid
-				},
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					if (res.data.code == 0) {
+				})
+				.then(res => {
+					if (res.code == 0) {
 						// 添加监听器，通知群组页面
 						uni.$emit('FriendsList', { data: '' });
 						uni.showToast({
@@ -51,7 +46,7 @@ export default {
 						});
 						let msg = {
 							dstid: parseInt(this.dstid),
-							cmd: 9,
+							cmd: 9
 						};
 						this.$store.commit('webSocketSend', msg);
 						setTimeout(function() {
@@ -61,12 +56,12 @@ export default {
 						}, 1000);
 					} else {
 						uni.showToast({
-							title: res.data.msg,
+							title: res.msg,
 							duration: 2000
 						});
 					}
-				}
-			});
+				})
+				.catch(err => {});
 		}
 	}
 };

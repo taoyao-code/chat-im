@@ -42,10 +42,6 @@ import uniList from '@/components/uni-list/uni-list.vue';
 import uniListItem from '@/components/uni-list-item/uni-list-item.vue';
 import avatar from '@/components/yq-avatar/yq-avatar.vue';
 
-// import UserApi from '@/pages/user/service/UserApi.js'
-// import UserManager from '@/pages/user/logical/UserManager.js'
-// import UserJumpHelper from '@/pages/user/helper/UserJumpHelper.js'
-
 export default {
 	components: {
 		uniList,
@@ -55,7 +51,7 @@ export default {
 	data() {
 		return {
 			userInfo: {
-				id:0,
+				id: 0,
 				username: '',
 				nickname: '',
 				avatar: ''
@@ -69,9 +65,7 @@ export default {
 		this.userInfo.nickname = uni.getStorageSync('nickname');
 		this.userInfo.avatar = uni.getStorageSync('avatar');
 	},
-	onShow() {
-		
-	},
+	onShow() {},
 	methods: {
 		updateAvatar(res) {
 			// 头像
@@ -81,14 +75,15 @@ export default {
 				url: uni.getStorageSync('URL') + '/attach/upload',
 				filePath: res.path,
 				name: 'file',
-				count:1,
-				sizeType:['compressed'],
-				success: (r) => {
+				count: 1,
+				sizeType: ['compressed'],
+				success: r => {
 					let ret = JSON.parse(r.data);
-					if(ret.code == 0){
-						self.updateUser(ret.data)
+					if (ret.code == 0) {
+						self.updateUser(ret.data);
 					}
-				},fail:err=>{
+				},
+				fail: err => {
 					console.log(err);
 				}
 			});
@@ -115,7 +110,7 @@ export default {
 		userOut() {
 			let msg = {
 				userid: uni.getStorageSync('UID'),
-				cmd: 1,
+				cmd: 1
 			};
 			this.$store.commit('webSocketSend', msg);
 			uni.removeStorageSync('UID');
@@ -124,36 +119,28 @@ export default {
 				url: '../../../login/login'
 			});
 		},
-		updateUser(url){
-			uni.request({
-				url: uni.getStorageSync('URL')+'/user/updateUser',
-				method: 'POST',
-				data: {
-					userid: uni.getStorageSync('UID'),
-					avatar: url
-				},
-				header: {
-					'content-type': 'application/x-www-form-urlencoded'
-				},
-				success: res => {
-					if (res.data.code == 0) {
-						if(url.substring(0,4) == 'http'){
-							uni.setStorageSync('avatar',url)
-						}else{
-							uni.setStorageSync('avatar',uni.getStorageSync('URL')+url)
+		updateUser(url) {
+			this.$http
+				.post('/user/updateUser', { userid: uni.getStorageSync('UID'), avatar: url })
+				.then(res => {
+					if (res.code == 0) {
+						if (url.substring(0, 4) == 'http') {
+							uni.setStorageSync('avatar', url);
+						} else {
+							uni.setStorageSync('avatar', uni.getStorageSync('URL') + url);
 						}
 					} else {
 						uni.showToast({
-							title: res.data.msg,
+							title: res.msg,
 							duration: 2000
 						});
 					}
-				}
-			});
+				})
+				.catch(err => {});
 		},
 		systemSettings() {
 			// 系统设置
-			let that = this
+			let that = this;
 			uni.navigateTo({
 				url: '../../../setting/setting'
 			});
@@ -181,7 +168,7 @@ export default {
 	border-radius: 50%;
 	/*border-radius: 100%;*/
 }
-uni-image>img{
+uni-image > img {
 	width: 100rpx;
 	height: 100rpx;
 	border: 1px solid red;

@@ -10,7 +10,6 @@
 	</view>
 </template>
 
-
 <script>
 import mInput from '@/components/m-input.vue';
 export default {
@@ -19,11 +18,11 @@ export default {
 	},
 	data() {
 		return {
-			userid:0,
-			dstid:'',
+			userid: 0,
+			dstid: ''
 		};
 	},
-	onLoad(option){
+	onLoad(option) {
 		this.userid = uni.getStorageSync('UID');
 	},
 	methods: {
@@ -32,44 +31,37 @@ export default {
 				return;
 			}
 			// 加入群聊
-			uni.request({
-			    url: uni.getStorageSync('URL')+'/contact/joincommunity',
-				method:"POST",
-			    data: {
-			        dstid: this.dstid, // 群ID
-					userid:this.userid
-			    },
-			    header: {
-			        'content-type': 'application/x-www-form-urlencoded'
-			    },
-			    success: (res) => {
-					if(res.data.code == 0){
+			this.$http
+				.post('/contact/joincommunity', {
+					dstid: this.dstid, // 群ID
+					userid: this.userid
+				})
+				.then(res => {
+					if (res.code == 0) {
 						// 添加监听器，通知群组页面
-						uni.$emit('updateGroupList',{data:''});
+						uni.$emit('updateGroupList', { data: '' });
 						uni.showToast({
-						    title: '加入成功',
-						    duration: 2000
+							title: '加入成功',
+							duration: 2000
 						});
-						setTimeout(function(){
+						setTimeout(function() {
 							uni.navigateBack({
 								delta: 1
 							});
-						},1000)
-					}else{
+						}, 1000);
+					} else {
 						uni.showToast({
-						    title: res.data.msg,
-							icon:'none',
-						    duration: 2000
+							title: res.msg,
+							icon: 'none',
+							duration: 2000
 						});
 					}
-			    }
-			});
-		},
-		
+				})
+				.catch(err => {});
+		}
 	}
 };
 </script>
-
 
 <style>
 page {

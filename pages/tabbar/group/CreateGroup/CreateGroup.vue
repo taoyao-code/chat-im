@@ -53,21 +53,16 @@ export default {
 		addGroupData() {
 			// 添加群组信息
 			if (this.GroupName && this.GroupIntroduction) {
-				uni.request({
-					url: uni.getStorageSync('URL') + '/contact/createcommunity',
-					method: 'POST',
-					data: {
+				this.$http
+					.post('/contact/createcommunity', {
 						name: this.GroupName,
 						cate: 1,
 						memo: this.GroupIntroduction,
 						icon: this.avatar ? this.avatar : '/asset/images/community.png',
 						ownerid: uni.getStorageSync('UID') // 群主ID
-					},
-					header: {
-						'content-type': 'application/x-www-form-urlencoded'
-					},
-					success: res => {
-						if (res.data.code == 0) {
+					})
+					.then(res => {
+						if (res.code == 0) {
 							// 添加监听器，通知群组页面
 							uni.$emit('updateGroupList', { data: '' });
 							uni.showToast({
@@ -81,12 +76,12 @@ export default {
 							}, 1000);
 						} else {
 							uni.showToast({
-								title: res.data.msg,
+								title: res.msg,
 								duration: 2000
 							});
 						}
-					}
-				});
+					})
+					.catch(err => {});
 			} else {
 				uni.showToast({
 					title: '请填写正确的值!',
