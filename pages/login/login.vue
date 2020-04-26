@@ -88,10 +88,6 @@
 				}, 1000)
 			},
 			bindLogin() {
-				/**
-				 * 客户端对账号信息进行一些必要的校验。
-				 * 实际开发中，根据业务需要进行处理，这里仅做示例。
-				 */
 				if (this.account.length < 1) {
 					uni.showToast({
 						icon: 'none',
@@ -106,19 +102,16 @@
 					});
 					return;
 				}
-				/**
-				 * 下面简单模拟下服务端的处理
-				 * 检测用户账号密码是否在已注册的用户列表中
-				 * 实际开发中，使用 uni.request 将账号信息发送至服务端，客户端在回调函数中获取结果信息。
-				 */
 				const data = {
 					account: this.account,
 					password: this.password
 				};
 				this.$http
-					.post('/user/login', {
+					.post('/index/user/login', {
 						mobile: this.account,
 						passwd: this.password
+					},{
+						custom: {auth: false}
 					})
 					.then(res => {
 						if (res.code == 0) {
@@ -132,6 +125,8 @@
 							uni.setStorageSync('Token', token);
 							uni.setStorageSync('nickname', res.data.nickname);
 							uni.setStorageSync('mobile', res.data.mobile);
+							// 请求中Authorization的Token信息
+							uni.setStorageSync('Authorization', res.msg);
 
 							var avatar = res.data.avatar ? res.data.avatar : 'https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png';
 							if (avatar.substring(0, 4) == 'http') {

@@ -1,7 +1,7 @@
 <script>
 export default {
 	onLaunch: function() {
-		uni.setStorageSync('WS', 'ws://localhost:8081');
+		uni.setStorageSync('WS', 'ws://localhost:8081/index');
 		uni.setStorageSync('URL', 'http://localhost:8081');
 		uni.setStorageSync('ImageURL', 'http://localhost:8081/');
 		

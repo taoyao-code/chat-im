@@ -11,7 +11,7 @@ export default class Request {
   config = {
     baseUrl: '',
     header: {
-      'content-type': 'application/x-www-form-urlencoded'
+      'content-type': 'application/x-www-form-urlencoded',
     },
     method: 'GET',
     dataType: 'json',

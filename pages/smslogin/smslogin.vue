@@ -6,7 +6,7 @@
 				<view class="f-input">
 					<view class="i-item"><input type="text" placeholder="请输入手机号" v-model="phone" /></view>
 					<view class="i-item">
-						<input type="password" placeholder="请输入验证码" />
+						<input type="text" placeholder="请输入验证码" />
 						<text class="btn btn-disable" v-if="time">{{ time }}S后重发</text>
 						<text class="btn" v-else @tap="sendCode">获取验证码</text>
 					</view>

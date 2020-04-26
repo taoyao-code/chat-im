@@ -8,6 +8,9 @@ http.setConfig((config) => { /* 设置全局配置 */
 	config.header = {
 		...config.header,
 	}
+	config.custom = {
+		auth: true
+	}
 	return config
 })
 
@@ -24,22 +27,30 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
 	config.header = {
 		...config.header,
 	}
-	/*
-	if (!token) { // 如果token不存在，调用cancel 会取消本次请求，但是该函数的catch() 仍会执行
-	  cancel('token 不存在') // 接收一个参数，会传给catch((err) => {}) err.errMsg === 'token 不存在'
+	console.log(config.custom.auth);
+	if (config.custom.auth) {
+		// 添加token
+		let Authorization = uni.getStorageSync('Authorization');
+		config.params.Authorization = Authorization;
+		if (!Authorization) { // 如果token不存在，调用cancel 会取消本次请求，但是该函数的catch() 仍会执行
+		  cancel('token 不存在') // 接收一个参数，会传给catch((err) => {}) err.errMsg === 'token 不存在'
+		}
+	} else {
+		// 不需要token
 	}
-	*/
+	
 	return config
 })
 
 http.interceptor.response((response) => { /* 请求之后拦截器 */
-	if (response.data.code !== 0) { // 服务端返回的状态码不等于200，则reject()
-		return Promise.reject(response)
-	}
-	if (response.statusCode !== 200) { // 服务端返回的状态码不等于200，则reject()
+	if (response.data.code == -3) {
 		//  刷新token
 		// 提示其他
+		return Promise.reject(response)
 	}
+	// if (response.statusCode !== 200) { // 服务端返回的状态码不等于200，则reject()
+
+	// }
 	// if (response.config.custom.verification) { // 演示自定义参数的作用
 	//   return response.data
 	// }
