@@ -3,7 +3,8 @@ import Request from './request'
 const http = new Request()
 
 http.setConfig((config) => { /* 设置全局配置 */
-	config.baseUrl = 'http://localhost:8081' /* 根域名不同 */
+	// config.baseUrl = 'http://chat.bo5.xyz' /* 服务 */
+	config.baseUrl = 'http://localhost:8081' /* 本地 */
 	config.header = {
 		...config.header,
 	}

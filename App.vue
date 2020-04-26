@@ -5,8 +5,10 @@ export default {
 		uni.setStorageSync('URL', 'http://localhost:8081');
 		uni.setStorageSync('ImageURL', 'http://localhost:8081/');
 		
+		// uni.setStorageSync('WS', 'ws://chat.bo5.xyz');
+		// uni.setStorageSync('URL', 'http://chat.bo5.xyz');
+		// uni.setStorageSync('ImageURL', 'http://chat.bo5.xyz/');
 		
-						
 		let value = uni.getStorageSync('UID');
 		if (!value) {
 			uni.reLaunch({
@@ -46,6 +48,8 @@ export default {
 	}
 };
 </script>
-<style>
-	
+<style lang="less">
+    @import "./common/less/base";
+    @import "./common/less/iconfont";
+    @import "./common/less/border-1px";
 </style>

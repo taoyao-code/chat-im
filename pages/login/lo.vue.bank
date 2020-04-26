@@ -3,66 +3,45 @@
 		<view class="input-group">
 			<view class="input-row border">
 				<text class="title">账号：</text>
-				<m-input type="text" focus clearable v-model="account" placeholder="请输入账号"></m-input>
+				<m-input class="m-input" type="text" clearable focus v-model="account" placeholder="请输入账号"></m-input>
 			</view>
-			<view class="input-row border">
-				<text class="title">手机号：</text>
-				<m-input type="text" focus clearable v-model="phone" placeholder="请输入手机号"></m-input>
-			</view>
-			<view class="input-row border">
+			<view class="input-row">
 				<text class="title">密码：</text>
 				<m-input type="password" displayable v-model="password" placeholder="请输入密码"></m-input>
 			</view>
-			<view class="input-row border">
-				<text class="title">验证码：</text>
-				<m-input type="Captcha" displayable v-model="code" placeholder="请输入验证码"></m-input>
-				<image :src="ico" mode="" @tap="initCaptcha" class="captcha"></image>
-			</view>
 		</view>
-		<view class="btn-row"><button type="primary" class="primary" @tap="register">注册</button></view>
+		<view class="btn-row"><button type="primary" class="primary" @tap="bindLogin">登录</button></view>
+		<view class="action-row"><navigator url="../reg/reg">注册账号</navigator></view>
 	</view>
 </template>
 
 <script>
 import service from '../../service.js';
+import { mapState, mapMutations } from 'vuex';
 import mInput from '../../components/m-input.vue';
-import {validate} from '../../utils/validate';
+
 export default {
 	components: {
 		mInput
 	},
 	data() {
 		return {
+			providerList: [],
+			hasProvider: false,
 			account: '',
 			password: '',
-			phone:'',
-			ico: '',
-			code: '',
-			id: ''
+			positionTop: 0
 		};
 	},
-	onLoad() {
-		this.initCaptcha();
-	},
 	methods: {
-		initCaptcha() {
-			this.$http
-				.post('/getCaptcha')
-				.then(res => {
-					if (res.code == 0) {
-						this.ico = res.data;
-						this.id = res.id;
-					} else {
-						uni.showToast({
-							title: res.data.msg,
-							icon: 'none',
-							duration: 2000
-						});
-					}
-				})
-				.catch(err => {});
+		initPosition() {
+			/**
+			 * 使用 absolute 定位，并且设置 bottom 值进行定位。软键盘弹出时，底部会因为窗口变化而被顶上来。
+			 * 反向使用 top 进行定位，可以避免此问题。
+			 */
+			this.positionTop = uni.getSystemInfoSync().windowHeight - 100;
 		},
-		register() {
+		bindLogin() {
 			/**
 			 * 客户端对账号信息进行一些必要的校验。
 			 * 实际开发中，根据业务需要进行处理，这里仅做示例。
@@ -74,20 +53,6 @@ export default {
 				});
 				return;
 			}
-			if (!this.phone.length){
-				uni.showToast({
-					icon:'none',
-					title:'手机号必须'
-				})
-				return
-			}
-			if(!validate.isMobile(this.phone)){
-				uni.showToast({
-					icon:'none',
-					title:'手机号格式不对'
-				})
-				return
-			}
 			if (this.password.length < 1) {
 				uni.showToast({
 					icon: 'none',
@@ -95,23 +60,43 @@ export default {
 				});
 				return;
 			}
-			if (this.code.length < 1) {
-				uni.showToast({
-					icon: 'none',
-					title: '验证码最短为 1 个字符'
-				});
-				return;
-			}
+			/**
+			 * 下面简单模拟下服务端的处理
+			 * 检测用户账号密码是否在已注册的用户列表中
+			 * 实际开发中，使用 uni.request 将账号信息发送至服务端，客户端在回调函数中获取结果信息。
+			 */
+			const data = {
+				account: this.account,
+				password: this.password
+			};
 			this.$http
-				.post('/user/register', { mobile: this.account,phone: this.phone,passwd: this.password, uuid: this.id, code: this.code })
+				.post('/user/login', { mobile: this.account,
+					passwd: this.password })
 				.then(res => {
 					if (res.code == 0) {
 						uni.showToast({
-							title: '注册成功',
+							title: '登录成功',
 							duration: 2000
 						});
-						uni.navigateBack({
-							delta: 1
+						let uid = res.data.id;
+						let token = res.data.token;
+						uni.setStorageSync('UID', uid + '');
+						uni.setStorageSync('Token', token);
+						uni.setStorageSync('nickname', res.data.nickname);
+						uni.setStorageSync('mobile', res.data.mobile);
+					
+						var avatar = res.data.avatar ? res.data.avatar : 'https://img-cdn-qiniu.dcloud.net.cn/new-page/hx.png';
+						if (avatar.substring(0, 4) == 'http') {
+							uni.setStorageSync('avatar', avatar);
+						} else {
+							uni.setStorageSync('avatar', uni.getStorageSync('URL') + avatar);
+						}
+						this.$store.commit('setUid', uid);
+						this.$store.commit('setSid', token);
+						this.$store.commit('setUrl', uni.getStorageSync('WS') + '/chat?id=' + uid + '&token=' + token);
+						this.$store.dispatch('webSocketInit'); // 初始化ws
+						uni.reLaunch({
+							url: '../tabbar/contact/contact'
 						});
 					} else {
 						uni.showToast({
@@ -119,12 +104,15 @@ export default {
 							icon: 'none',
 							duration: 2000
 						});
-						// 重新加载验证码
-						this.initCaptcha();
 					}
 				})
 				.catch(err => {});
+			
+			
 		}
+	},
+	onReady() {
+		this.initPosition();
 	}
 };
 </script>
@@ -288,9 +276,5 @@ button.primary {
 	width: 100%;
 	height: 100%;
 	opacity: 0;
-}
-.captcha {
-	height: 100upx;
-	width: 300upx;
 }
 </style>

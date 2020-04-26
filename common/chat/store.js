@@ -185,7 +185,7 @@ export default new Vuex.Store({
 			console.log("第" + state.webSocketReconnectCount + "次重连")
 			state.webSocketReconnectCount += 1;
 			// 判断是否到了最大重连次数 
-			if (state.webSocketReconnectCount >= 10) {
+			if (state.webSocketReconnectCount >= 5) {
 				uni.$emit('Reconnect_sign_out');
 				this.webSocketWarningText = "重连次数超限";
 				return false;

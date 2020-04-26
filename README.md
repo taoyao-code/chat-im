@@ -28,6 +28,7 @@
 首次使用
 ```
 1.修改 App.vue 中 ws 和 url 信息
+2.修改utils目录下index.js中config.baseUrl的url
 ```
 ## 体验地址：
 #### Android:[Android](http://doc.bo5.xyz/Android-chat-im.apk)

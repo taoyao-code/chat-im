@@ -61,6 +61,12 @@
             "path" : "pages/setting/setting",
             "style" : {}
         }
+		,{            
+			"path" : "pages/smslogin/smslogin",
+            "style": {
+                "navigationBarTitleText": "短信登录"
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
