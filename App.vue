@@ -1,13 +1,13 @@
 <script>
 export default {
 	onLaunch: function() {
-		uni.setStorageSync('WS', 'ws://localhost:8081/index');
-		uni.setStorageSync('URL', 'http://localhost:8081');
-		uni.setStorageSync('ImageURL', 'http://localhost:8081/');
+		// uni.setStorageSync('WS', 'ws://localhost:8081/index');
+		// uni.setStorageSync('URL', 'http://localhost:8081');
+		// uni.setStorageSync('ImageURL', 'http://localhost:8081/');
 		
-		// uni.setStorageSync('WS', 'ws://chat.bo5.xyz');
-		// uni.setStorageSync('URL', 'http://chat.bo5.xyz');
-		// uni.setStorageSync('ImageURL', 'http://chat.bo5.xyz/');
+		uni.setStorageSync('WS', 'ws://chat.bo5.xyz/index');
+		uni.setStorageSync('URL', 'http://chat.bo5.xyz');
+		uni.setStorageSync('ImageURL', 'http://chat.bo5.xyz/');
 		
 		let value = uni.getStorageSync('UID');
 		if (!value) {

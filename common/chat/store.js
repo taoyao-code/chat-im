@@ -182,6 +182,7 @@ export default new Vuex.Store({
 			if (state.webSocketIsOpen) {
 				return false;
 			}
+			
 			console.log("第" + state.webSocketReconnectCount + "次重连")
 			state.webSocketReconnectCount += 1;
 			// 判断是否到了最大重连次数 
@@ -189,6 +190,12 @@ export default new Vuex.Store({
 				uni.$emit('Reconnect_sign_out');
 				this.webSocketWarningText = "重连次数超限";
 				return false;
+			}else{
+				uni.showToast({
+				    title: '连接中，请稍后',
+					icon:'none',
+				    duration: 2000
+				});
 			}
 			// 初始化
 			console.log("开始重连")

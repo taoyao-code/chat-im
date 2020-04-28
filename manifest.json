@@ -64,13 +64,15 @@
             "base" : "/h5/"
         },
         "domain" : "http://doc.bo5.xyz",
-        "proxy" : {
-            "/" : {
-                "target" : "http://chat.bo5.xyz",
-                "changeOrigin" : true,
-                "ws" : true,
-                "pathRewrite" : {
-                    "^/" : ""
+        "devServer" : {
+            "proxy" : {
+                "/" : {
+                    "target" : "http://chat.bo5.xyz",
+                    "changeOrigin" : true,
+                    "ws" : true,
+                    "pathRewrite" : {
+                        "^/" : ""
+                    }
                 }
             }
         }
