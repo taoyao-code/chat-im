@@ -51,11 +51,15 @@
         }
         ,{
             "path" : "pages/chat/chatim",
-            "style" : {}
+            "style" : {
+				"enablePullDownRefresh": true
+			}
         }
         ,{
             "path" : "pages/chat/Groupim",
-            "style" : {}
+            "style" : {
+				"enablePullDownRefresh": true
+			}
         }
         ,{
             "path" : "pages/setting/setting",

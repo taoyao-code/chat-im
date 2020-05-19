@@ -87,6 +87,15 @@ export default new Vuex.Store({
 						case 9:
 							uni.$emit('FriendsList');// 9 通知好友页，有新好友添加
 							return;
+						case 3:
+							var key = "chartPage"; // 10 单聊 /key:响应界面
+							// 敏感词
+							uni.showToast({
+							    title: '存在敏感信息，发送失败',
+							    duration: 2000
+							});
+							
+							break;
 						default:
 							return;
 					}
@@ -194,7 +203,7 @@ export default new Vuex.Store({
 				uni.showToast({
 				    title: '连接中，请稍后',
 					icon:'none',
-				    duration: 2000
+				    duration: 3000
 				});
 			}
 			// 初始化

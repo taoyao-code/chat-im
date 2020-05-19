@@ -928,6 +928,41 @@ export default {
 				return uni.getStorageSync('ImageURL') + url;
 			}
 		}
+	},
+	onPullDownRefresh(){
+		if (this.total == 0) {
+			setTimeout(function() {
+				uni.stopPullDownRefresh();
+			}, 1000);
+			return;
+		}
+		this.pagefrom++;
+		this.$http
+			.post('/message/chathistory', {
+				userid: this.myuid,
+				dstid: this.dstid,
+				cmd: CMD,
+				pagefrom: this.pagefrom,
+				pagesize: this.pagesize
+			})
+			.then(res => {
+				if (res.code == 0) {
+					// 获取消息中的图片,并处理显示尺寸
+					let list = res.rows;
+					for (let i = 0; i < res.total; i++) {
+						if (list[i].type == 2 && list[i].media == IMG) {
+							list[i].url = this.imageUrl(list[i].url);
+							this.msgImgList.unshift(list[i].url);
+						}
+						this.msgList.unshift(list[i]);
+					}
+					this.total = res.total;
+				}
+			})
+			.catch(err => {});
+		setTimeout(function() {
+			uni.stopPullDownRefresh();
+		}, 1000);
 	}
 };
 </script>

@@ -3,8 +3,8 @@ import Request from './request'
 const http = new Request()
 
 http.setConfig((config) => { /* 设置全局配置 */
-	config.baseUrl = 'http://chat.bo5.xyz' /* 服务 */
-	// config.baseUrl = 'http://localhost:8081' /* 本地 */
+	// config.baseUrl = 'http://chat.bo5.xyz' /* 服务 */
+	config.baseUrl = uni.getStorageSync('URL') /* 本地 */
 	config.header = {
 		...config.header,
 	}
@@ -27,7 +27,6 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
 	config.header = {
 		...config.header,
 	}
-	console.log(config.custom.auth);
 	if (config.custom.auth) {
 		// 添加token
 		let Authorization = uni.getStorageSync('Authorization');
@@ -43,13 +42,7 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
 })
 
 http.interceptor.response((response) => { /* 请求之后拦截器 */
-	if (response.statusCode == 400) {
-		// token不存在，跳转登录
-		uni.reLaunch({
-			url: '/pages/login/login'
-		});
-		return
-	}
+
 	if (response.statusCode == 401) {
 		// token过期，进行刷新token
 		// response = await 
@@ -67,10 +60,27 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 	// }
 	return response.data
 }, (response) => { // 请求错误做点什么
-	uni.showToast({
-	    title: '网络错误，请稍后再试!',
-	    duration: 2000
-	});
+	if (response.statusCode == 400 || response.statusCode == 401) {
+		// token不存在，跳转登录
+		uni.showToast({
+			title: '请重新登录!',
+			duration: 2000
+		});
+		setTimeout(function() {
+			uni.removeStorageSync('UID');
+			uni.reLaunch({
+				url: '/pages/login/login?backtype=1',
+			});
+		}, 1000);
+		return
+	}
+	if (response.statusCode == 500) {
+		uni.showToast({
+			title: '网络错误，请稍后再试!',
+			duration: 2000
+		});
+		return
+	}
 	return response
 })
 

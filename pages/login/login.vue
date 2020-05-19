@@ -21,9 +21,9 @@
 				<text @tap="reg">
 					注册账号   
 				</text>
-				<text @tap="smslogin">
+				<!-- <text @tap="smslogin">
 					《短信登录》
-				</text>
+				</text> -->
 			</view>
 			<view class="w-third">
 				<view class="t-title">
@@ -66,6 +66,17 @@
 				password: '',
 				positionTop: 0
 			};
+		},
+		onLoad(option){
+			let that = this;
+			if(option.backtype == 1){
+				// 关闭ws重连
+				this.$store.state.webSocketIsReconnect = false
+				setTimeout(function(){
+					// 开启
+					that.$store.state.webSocketIsReconnect = true
+				},2000)
+			}
 		},
 		methods: {
 			initPosition() {
