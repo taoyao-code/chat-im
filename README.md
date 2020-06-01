@@ -32,6 +32,7 @@
 ## 体验地址：
 #### Android:[Android](http://doc.bo5.xyz/Android-chat-im.apk)
 #### H5:[chat-im](http://doc.bo5.xyz/h5/)
+#### 新版本-H5:[chat-im](http://doc.bo5.xyz/h5s/)
 
 
 ### 后端代码
