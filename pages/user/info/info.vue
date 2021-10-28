@@ -2,7 +2,7 @@
 	<view class="box">
 		<view class="top">
 			<view class="region">
-				<view class="img-box"><image src="/static/other/1.png"></image></view>
+				<view class="img-box"><u-image src="https://cdn.uviewui.com/uview/example/fade.jpg" width="110rpx" height="110rpx" shape="circle"></u-image></view>
 				<view class="info">
 					<view class="name">niew</view>
 					<view class="time">到期时间: 2099.09.09</view>
@@ -13,25 +13,28 @@
 		<view class="title">会员特权</view>
 		<view class="menu-box">
 			<view class="menu">
-				<image src="/static/other/3.png"></image>
+				<u-image src="https://cdn.uviewui.com/uview/example/fade.jpg"></u-image>
 				<text>课程免费</text>
 			</view>
 			<view class="menu">
-				<image src="/static/other/2.png"></image>
+				<u-image src="https://cdn.uviewui.com/uview/example/fade.jpg"></u-image>
 				<text>双倍积分</text>
 			</view>
 			<view class="menu">
-				<image src="/static/other/5.png"></image>
+				<u-image src="https://cdn.uviewui.com/uview/example/fade.jpg"></u-image>
 				<text>专属兑换</text>
 			</view>
 			<view class="menu">
-				<image src="/static/other/7.png"></image>
+				<u-image src="https://cdn.uviewui.com/uview/example/fade.jpg"></u-image>
 				<text>尊贵标识</text>
 			</view>
 		</view>
 		<view style="height: 20rpx;margin: 50rpx 20rpx 20rpx 20rpx;background-color: #f4f4f4;"></view>
 		<view class="">
-			1
+			<u-cell-group>
+				<u-cell-item icon="setting-fill" title="个人设置"></u-cell-item>
+				<u-cell-item icon="integral-fill" title="会员等级" value="新版本"></u-cell-item>
+			</u-cell-group>
 		</view>
 	</view>
 </template>
@@ -164,5 +167,4 @@ export default {
 		}
 	}
 }
-
 </style>
